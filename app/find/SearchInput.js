@@ -26,6 +26,8 @@ export default class SearchInput extends React.Component {
             onSubmitEditing={() => this.props.onSearch(this.state.searchTerm)}
             returnKeyType='search'
             value={this.state.searchTerm}
+            autoCapitalize='none'
+            autoCorrect={false}
           />
         </View>
       </Image>      
@@ -38,7 +40,8 @@ const styles = StyleSheet.create({
     flex: 1,
     width: null,
     height: null,
-    justifyContent: 'center' 
+    justifyContent: 'center',
+    backgroundColor: colors.mainAccent
   },
   searchContainer: {
     padding: 10,

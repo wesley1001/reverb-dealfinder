@@ -1,5 +1,5 @@
 import React, { View, Text, StyleSheet, TouchableOpacity, ListView, Image, InteractionManager } from 'react-native';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 
 import { navigateTo } from '../shared/router/routerActions';
 import { findDealsForSearchTerm, findDealsForCategory, findMoreDeals, resetSearchTerm, resetCategory } from '../find/actions';
@@ -27,17 +27,17 @@ export default class Products extends React.Component {
   
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      this.setState({ isLoading: true })
-      if (this.props.searchTerm) {
-        this.props.dispatch(findDealsForSearchTerm(this.props.searchTerm));
-      } 
-      else if (this.props.selectedCategory) {
-        this.props.dispatch(findDealsForCategory(this.props.selectedCategory));
-      }
+      this._loadDeals(this.props.searchTerm, this.props.selectedCategory);
     });
   }
 
   componentWillReceiveProps(nextProps) {
+    if (! nextProps.isLoading && 
+      ((nextProps.searchTerm && nextProps.searchTerm !== this.props.searchTerm) ||
+      (nextProps.selectedCategory && nextProps.selectedCategory !== this.props.selectedCategory))) {
+      this._loadDeals(nextProps.searchTerm, nextProps.selectedCategory);  
+    }
+    
     if (nextProps.deals) {
       this.state.dataSource = this._ds.cloneWithRows(nextProps.deals);
     }
@@ -57,9 +57,20 @@ export default class Products extends React.Component {
     this.props.dispatch(resetCategory());
   }
   
+  _loadDeals(searchTerm, selectedCategory) {
+    this.setState({ isLoading: true })
+    if (searchTerm) {
+      this.props.dispatch(findDealsForSearchTerm(searchTerm));
+    } 
+    else if (selectedCategory) {
+      this.props.dispatch(findDealsForCategory(selectedCategory));
+    }
+  }
+  
   _getMoreDeals() {
     if (! this.state.isLoading && this.props.canLoadMoreDeals) {
-      this.props.dispatch(findMoreDeals());    
+      // TODO: need to find a more efficient deal finder algorithm.
+      ///this.props.dispatch(findMoreDeals());    
     }
   }
 
@@ -91,6 +102,19 @@ export default class Products extends React.Component {
       </TouchableOpacity>
     );
   }
+  
+  _renderBackButton() {
+    if (!this.props.isWide) {
+      return (
+        <TouchableOpacity onPress={this._onGoBack} style={globalStyles.navbarButton}>
+          <Text style={globalStyles.navbarButtonText}>&lt; Back</Text>
+        </TouchableOpacity>
+      )
+    }
+    return (
+      <View style={globalStyles.navbarButton} />
+    );
+  }
     
   _renderLoadingIndicator() {
     if (this.props.isLoading) {
@@ -105,9 +129,7 @@ export default class Products extends React.Component {
     return (
       <View style={styles.container}>
         <View style={globalStyles.header}>
-         <TouchableOpacity onPress={this._onGoBack} style={globalStyles.navbarButton}>
-            <Text style={globalStyles.navbarButtonText}>&lt; Back</Text>
-          </TouchableOpacity>
+          {this._renderBackButton()}
           <View style={globalStyles.title}>
             <Text style={globalStyles.titleText}>Deals</Text>
           </View>
@@ -140,7 +162,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     alignSelf: 'center',
-    marginTop: 5,
+    marginTop: 10,
     marginBottom: 10
   },
   list: {
@@ -149,11 +171,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#fff',
-    margin: 3,
+    margin: 5,
     padding: 0,
     backgroundColor: '#fff',
     borderWidth: 0.5,
-    borderRadius: 2,
+    borderRadius: 3,
     borderColor: '#ddd',
     height: 96
   },
@@ -172,7 +194,7 @@ const styles = StyleSheet.create({
   },
   dealtitle: {
     color: colors.textNormal,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: 'bold'
   },
   prices: {
@@ -190,7 +212,7 @@ const styles = StyleSheet.create({
   },
   pricerange: {
     color: colors.textLight,
-    fontSize: 10,
+    fontSize: 11,
     flex: 1,
     textAlign: 'right',
     marginTop: 2

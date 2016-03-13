@@ -1,5 +1,11 @@
-This an example app built with [React Native](https://facebook.github.io/react-native/) 
-and [Redux](http://redux.js.org/) to find interesting deals on [Reverb.com](https://reverb.com). You can search for gear or browse categories. The app uses the Reverb price guide to determine the going rate of the instruments and the finds all listings with an interesting price. Viewing details of a listing takes you to the Reverb.com web site.
+This is an example app built with [React Native](https://facebook.github.io/react-native/) 
+and [Redux](http://redux.js.org/) for both iOS and Android to find interesting deals on [Reverb.com](https://reverb.com). 
+
+You can search for gear or browse categories. The app uses the Reverb price guide to determine the going rate of the instruments and then finds all listings with an interesting price. Viewing details of a listing takes you to the Reverb.com web site.
+
+The app works on both phones and tablets. In landscape mode on a tablet, the layout changes automatically and the search screen turns into a side bar.
+
+Note: since this is only an example app for developers, there are no guarantees whatsoever about the correctness of the search results. Do not use it for serious gear hunting :-).
 
 ![Find](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/find.png)
 ![Deals](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/deals.png)
@@ -49,6 +55,13 @@ react-native run-android
 ```
 npm run test
 ``` 
+
+#More screenshots
+
+iPad:
+
+![Find Tablet portrait](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/find-tablet-portrait.png)
+![Deals Tablet landscape](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/deals-tablet-landscape.png)
  
  # License
  MIT &copy; Martijn Boland
